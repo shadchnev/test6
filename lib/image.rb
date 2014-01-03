@@ -24,6 +24,12 @@ class Image
     @image[row][column] = colour
   end
 
+  def vertical_segment(column:, startrow:, endrow:, colour:)
+    (startrow..endrow).each do |row|
+      colour_pixel(column: column, row: row, colour: colour)
+    end
+  end
+
   def to_s
     @image.map{|row| row.join}.join("\n")
   end

@@ -30,6 +30,12 @@ class Image
     end
   end
 
+  def horizontal_segment(startcolumn:, endcolumn:, row:, colour:)
+    (startcolumn..endcolumn).each do |column|
+      colour_pixel(column: column, row: row, colour: colour)
+    end
+  end
+
   def to_s
     @image.map{|row| row.join}.join("\n")
   end

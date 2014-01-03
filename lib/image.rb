@@ -13,7 +13,7 @@ class Image
   def clear
     @image.each do |row|
       row.map! do |pixel|
-        pixel = :O
+        :O
       end
     end
   end

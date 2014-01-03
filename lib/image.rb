@@ -36,11 +36,39 @@ class Image
     end
   end
 
+  def fill(column:, row:, colour:)
+    validate_coords(column: column, row: row)
+    validate_colour(colour: colour)
+    recursive_fill(column: column, row: row, colour: colour)
+  end
+
   def to_s
     @image.map{|row| row.join}.join("\n")
   end
 
   private
+  def recursive_fill(column:, row:, colour:)
+    original_colour = @image[row][column]
+    colour_pixel(column: column, row: row, colour: colour)
+    # offsets for the pixels which share a side
+    # with the current one
+    [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
+      next_pixel = begin
+                     @image[row + offset[0]][column + offset[1]]
+                   rescue NoMethodError
+                     # need this for if row is out of bounds, as then
+                     # you're calling [] on nil 
+                     nil  
+                   end
+      # nil if next_pixel is out of bounds, false if wrong colour
+      if next_pixel == original_colour 
+        recursive_fill(column: column + offset[1],
+                       row: row + offset[0],
+                       colour: colour)
+      end
+    end
+  end
+
   def validate_colour(colour:)
     raise(ArgumentError, "Invalid colour") unless
       colour =~ /^[A-Z]$/

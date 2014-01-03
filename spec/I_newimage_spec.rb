@@ -7,9 +7,19 @@ describe Image do
     expect(image.to_s.split(/\n/).length).to eq 10
   end
 
-  context 'size limits' do
-    it 'should have a maximum size of 250 in each dimension' do
-      expect(Image.new(columns: 250, rows: 250)).to_not be_nil
-    end
+  it 'should have a maximum size of 250 in each dimension' do
+    expect{Image.new(columns: 250, rows: 250)}.not_to raise_error
+    expect{Image.new(columns: 251, rows: 250)}.to raise_error(ArgumentError)
+    expect{Image.new(columns: 250, rows: 251)}.to raise_error(ArgumentError)
+  end
+
+  it 'should have a minimum size of 1 in each dimension' do
+    expect{Image.new(columns: 1, rows: 1)}.not_to raise_error
+    expect{Image.new(columns: 1, rows: 0)}.to raise_error(ArgumentError)
+    expect{Image.new(columns: 1, rows: -1)}.to raise_error(ArgumentError)
+  end
+
+  it 'should raise for non-numeric inputs' do
+    expect{Image.new(columns: 'go', rows: 'fish')}.to raise_error
   end
 end

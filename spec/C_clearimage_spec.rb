@@ -6,8 +6,9 @@ describe 'Image#clear' do
     image.instance_variable_set(:@image, 
                                 [[:A, :B, :C, :D],
                                  [:O, :P, :Q, :R]])
-    expect{image.clear}.to change{image.to_s}.from(
-      "ABCD\nOPQR").to(
-        "OOOO\nOOOO")
+    expect{image.clear}
+    .to change{image.to_s}
+    .from("ABCD\nOPQR")
+    .to("OOOO\nOOOO")
   end
 end

@@ -19,13 +19,17 @@ class Image
   end
 
   def colour_pixel(column:, row:, colour:)
-    validate(column:column, row:row)
-    raise(ArgumentError, "Invalid colour") unless
-      colour =~ /^[A-Z]$/
+    validate_coords(column:column, row:row)
+    validate_colour(colour: colour)
     @image[row][column] = colour
   end
 
-  def validate(column:, row:)
+  def validate_colour(colour:)
+    raise(ArgumentError, "Invalid colour") unless
+      colour =~ /^[A-Z]$/
+  end
+
+  def validate_coords(column:, row:)
     begin
       @image.fetch(row).fetch(column)
     rescue IndexError

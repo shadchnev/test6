@@ -4,7 +4,7 @@ class Image
     if [columns, rows].any? { |dimension|
       dimension > 250 || dimension < 1
     } # braces make clear this is not the end of the if
-      raise(ArgumentError, "Rows & columns must be" +
+      raise(ArgumentError, "Rows & columns must be "\
                            "between 1 and 250 inclusive")
     end
     @image = Array.new(rows){Array.new(columns, :O)}
@@ -19,7 +19,20 @@ class Image
   end
 
   def colour_pixel(column:, row:, colour:)
+    validate(column:column, row:row)
+    raise(ArgumentError, "Invalid colour") unless
+      colour =~ /^[A-Z]$/
     @image[row][column] = colour
+  end
+
+  def validate(column:, row:)
+    begin
+      @image.fetch(row).fetch(column)
+    rescue IndexError
+      raise(ArgumentError, "Given co-ordinates "\
+        "(#{column}, #{row}), but image size is "\
+        "only #{@image[0].length} x #{@image.length}")
+    end
   end
 
   def to_s

@@ -38,6 +38,8 @@ class Image
     begin
       @image.fetch(row).fetch(column)
     rescue IndexError
+      # convert to argumenterror as that's caught &
+      # shown to the user w/o quitting
       raise(ArgumentError, "Given co-ordinates "\
         "(#{column}, #{row}), but image size is "\
         "only #{@image[0].length} x #{@image.length}")

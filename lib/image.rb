@@ -24,6 +24,11 @@ class Image
     @image[row][column] = colour
   end
 
+  def to_s
+    @image.map{|row| row.join}.join("\n")
+  end
+
+  private
   def validate_colour(colour:)
     raise(ArgumentError, "Invalid colour") unless
       colour =~ /^[A-Z]$/
@@ -39,7 +44,4 @@ class Image
     end
   end
 
-  def to_s
-    @image.map{|row| row.join}.join("\n")
-  end
 end

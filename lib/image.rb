@@ -7,7 +7,7 @@ class Image
       raise(ArgumentError, "Rows & columns must be" +
                            "between 1 and 250 inclusive")
     end
-    @image = [[:O] * columns ] * rows
+    @image = Array.new(rows){Array.new(columns, :O)}
   end
 
   def clear
@@ -16,6 +16,10 @@ class Image
         :O
       end
     end
+  end
+
+  def colour_pixel(column:, row:, colour:)
+    @image[row][column] = colour
   end
 
   def to_s

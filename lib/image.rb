@@ -1,13 +1,21 @@
 class Image
   # Mandatory named arguments! Ruby 2.1 goodness
   def initialize(columns:, rows:)
-    if [columns, rows].any? do |dimension|
+    if [columns, rows].any? { |dimension|
       dimension > 250 || dimension < 1
-    end
+    } # braces make clear this is not the end of the if
       raise(ArgumentError, "Rows & columns must be" +
                            "between 1 and 250 inclusive")
     end
     @image = [[:O] * columns ] * rows
+  end
+
+  def clear
+    @image.each do |row|
+      row.map! do |pixel|
+        pixel = :O
+      end
+    end
   end
 
   def to_s

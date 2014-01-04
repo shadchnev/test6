@@ -50,24 +50,22 @@ class Image
 
   private
   def recursive_fill(edges:, orig_colour:, final_colour:)
+    @count ||= 0
+    @count += 1
+    p @count
     return if edges.empty?
-    p '1'
     # colour all edges the final colour
     edges.each{|col, row| @image[row][col] = final_colour} 
     # add all neighbours of edges to edges
-    p '2'
+    new_edges = []
     edges.each do |col, row|
-      puts "edge = #{col}, #{row}"
       [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
-        puts "offset = #{offset}"
-        p [col + offset[0], row + offset[1]]
-        edges << [col + offset[0], row + offset[1]]
+        new_edges << [col + offset[0], row + offset[1]]
       end
     end
-    p '3'
     # filter out pixels that are already done, or not the original
     # colour, or outside the boundaries of the image
-    edges.select! do |col, row|
+    new_edges.select! do |col, row|
       begin
         @image[row][col] == orig_colour
       rescue NoMethodError
@@ -76,8 +74,7 @@ class Image
         false  
       end
     end
-    p '4'
-    recursive_fill(edges: edges, 
+    recursive_fill(edges: new_edges, 
                    orig_colour: orig_colour, 
                    final_colour: final_colour)
   end

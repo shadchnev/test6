@@ -39,20 +39,9 @@ class Image
   def fill(column:, row:, colour:)
     validate_coords(column: column, row: row)
     validate_colour(colour: colour)
-    recursive_fill(edges:[[column,row]], 
-                   orig_colour: @image[row][column], 
-                   final_colour: colour)
-  end
-
-  def to_s
-    @image.map{|row| row.join}.join("\n")
-  end
-
-  private
-  def recursive_fill(edges:, orig_colour:, final_colour:)
-    @count ||= 0
-    @count += 1
-    p @count
+    orig_colour = @image[row][column]
+    final_colour = colour
+    edges = [[column, row]]
     while !edges.empty?
       col, row = *edges.pop
       if in_grid?(column:col, row:row) && @image[row][col] == orig_colour
@@ -65,17 +54,19 @@ class Image
     end
   end
 
+  def to_s
+    @image.map{|row| row.join}.join("\n")
+  end
+
+  private
   def validate_colour(colour:)
-    raise(ArgumentError, "Invalid colour") unless
-      colour =~ /^[A-Z]$/
+    unless colour =~ /^[A-Z]$/
+      raise(ArgumentError, "Invalid colour") 
+    end
   end
 
   def validate_coords(column:, row:)
-    begin
-      @image.fetch(row).fetch(column)
-    rescue IndexError
-      # convert to argumenterror as that's caught &
-      # shown to the user w/o quitting
+    unless in_grid?(column:column, row:row)
       raise(ArgumentError, "Given co-ordinates "\
         "(#{column}, #{row}), but image size is "\
         "only #{@image[0].length} x #{@image.length}")

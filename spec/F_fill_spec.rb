@@ -43,7 +43,7 @@ describe 'Image#fill' do
 
   it 'should fill a 250x250 image without a problem' do
     image = Image.new(columns:250, rows:250)
-    Timeout::timeout(10) do
+    Timeout::timeout(1) do
       image.fill(column: 125,
                  row: 125,
                  colour: :A)

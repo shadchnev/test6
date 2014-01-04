@@ -15,36 +15,19 @@ class Menu
     begin
       case input
       when /^I\s+\d+\s+\d+$/
-        cols, rows = parse(input)
-        @image = Image.new(columns: cols, rows: rows)
+        process_I(*parse(input))
       when /^C$/
         @image.clear
       when /^L\s+\d+\s+\d+\s+[A-Z]$/
-        column, row, colour = *parse(input)
-        # All operations in image.rb are zero-indexed, so need to convert
-        @image.colour_pixel(column: column - 1, 
-                            row: row - 1,
-                            colour: colour)
+        process_L(*parse(input))
       when /^V\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
-        column, startrow, endrow, colour = parse(input)
-        @image.vertical_segment(column: column - 1,
-                                startrow: startrow - 1,
-                                endrow: endrow - 1,
-                                colour: colour)
+        process_V(*parse(input))
       when /^H\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
-        startcolumn, endcolumn, row, colour = parse(input)
-        @image.horizontal_segment(startcolumn: startcolumn - 1,
-                                  endcolumn: endcolumn - 1,
-                                  row: row - 1,
-                                  colour: colour)
+        process_H(*parse(input))
       when /^F\s+\d+\s+\d+\s+[A-Z]$/
-        column, row, colour = parse(input)
-        @image.fill(column: column - 1,
-                    row: row - 1,
-                    colour: colour)
+        process_F(*parse(input))
       when /^S$/
-        # nil has a to_s method, so need to manually raise
-        # if there's no image
+        # nil#to_s exists, so need to manually raise
         raise NoMethodError unless @image
         puts @image.to_s
       when /^X$/
@@ -53,6 +36,7 @@ class Menu
         puts 'Unrecognised command'
       end
     rescue ArgumentError => e
+      # pass argument errors up from image.rb
       puts e.message
     rescue NoMethodError
       puts 'No image exists'
@@ -60,6 +44,37 @@ class Menu
   end
 
   private
+  def process_I(cols, rows)
+    @image = Image.new(columns: cols, rows: rows)
+  end
+
+  def process_F(column, row, colour)
+    # All operations in image.rb are zero-indexed, so need to convert
+    @image.fill(column: column - 1,
+                row: row - 1,
+                colour: colour)
+  end
+
+  def process_H(startcolumn, endcolumn, row, colour)
+    @image.horizontal_segment(startcolumn: startcolumn - 1,
+                              endcolumn: endcolumn - 1,
+                              row: row - 1,
+                              colour: colour)
+  end
+
+  def process_V(column, startrow, endrow, colour)
+    @image.vertical_segment(column: column - 1,
+                            startrow: startrow - 1,
+                            endrow: endrow - 1,
+                            colour: colour)
+  end
+
+  def process_L(column, row, colour)
+    @image.colour_pixel(column: column - 1, 
+                        row: row - 1,
+                        colour: colour)
+  end
+
   def parse(input)
     params = input.split[1..-1]
     case params.length

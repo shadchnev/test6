@@ -1,18 +1,13 @@
 class Image
   # Mandatory named arguments! Ruby 2.1 goodness
   def initialize(columns:, rows:)
-    if [columns, rows].any? { |dimension|
-      dimension > 250 || dimension < 1
-    } # braces make clear this is not the end of the if
-      raise(ArgumentError, "Rows & columns must be "\
-                           "between 1 and 250 inclusive")
-    end
-    @image = Array.new(rows){Array.new(columns, :O)}
+    validate_dimension(columns: columns, rows: rows)
+    @image = Array.new(columns){Array.new(rows, :O)}
   end
 
   def clear
-    @image.each do |row|
-      row.map! do |pixel|
+    @image.each do |col|
+      col.map! do |pixel|
         :O
       end
     end
@@ -20,8 +15,8 @@ class Image
 
   def colour_pixel(column:, row:, colour:)
     validate_coords(column:column, row:row)
-    validate_colour(colour: colour)
-    @image[row][column] = colour
+    validate_colour(colour:colour)
+    @image[column][row] = colour
   end
 
   def vertical_segment(column:, startrow:, endrow:, colour:)
@@ -39,13 +34,13 @@ class Image
   def fill(column:, row:, colour:)
     validate_coords(column: column, row: row)
     validate_colour(colour: colour)
-    orig_colour = @image[row][column]
+    orig_colour = @image[column][row]
     final_colour = colour
     edges = [[column, row]]
     while !edges.empty?
       col, row = *edges.pop
-      if in_grid?(column:col, row:row) && @image[row][col] == orig_colour
-        @image[row][col] = final_colour
+      if in_grid?(column:col, row:row) && @image[col][row] == orig_colour
+        @image[col][row] = final_colour
         # add all neighbours of the candidate to edges
         [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
           edges << [col + offset[0], row + offset[1]]
@@ -55,7 +50,7 @@ class Image
   end
 
   def to_s
-    @image.map{|row| row.join}.join("\n")
+    @image.transpose.map{|row| row.join}.join("\n")
   end
 
   private
@@ -69,13 +64,23 @@ class Image
     unless in_grid?(column:column, row:row)
       raise(ArgumentError, "Given co-ordinates "\
         "(#{column}, #{row}), but image size is "\
-        "only #{@image[0].length} x #{@image.length}")
+        "only #{@image.length} x #{@image[0].length}")
     end
   end
   
+  def validate_dimension(columns:, rows:)
+    if [columns, rows].any? { |dimension|
+      dimension > 250 || dimension < 1
+    } # braces make clear this is not the end of the if
+      raise(ArgumentError, "Rows & columns must be "\
+                           "between 1 and 250 inclusive")
+    end
+  end
+
+
   def in_grid?(column:, row:)
     begin
-      @image.fetch(row).fetch(column)
+      @image.fetch(column).fetch(row)
     rescue IndexError
       return false
     end

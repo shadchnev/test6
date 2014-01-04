@@ -23,8 +23,8 @@ describe 'Image#fill' do
                       row: 1,
                       colour: :E)}
     .to change{image.to_s}
-    .from("OAB\nAAA\nCAD")
-    .to("OEB\nEEE\nCED")
+    .from("OAC\nAAA\nBAD")
+    .to("OEC\nEEE\nBED")
   end
 
   it 'should not touch a same-coloured but unconnected pixel' do
@@ -41,7 +41,7 @@ describe 'Image#fill' do
     .to("OAO\nAEA\nOAO")
   end
 
-  it 'should fill a 250x250 image without a problem' do
+  it 'should fill a 250x250 image in a reasonable time' do
     image = Image.new(columns:250, rows:250)
     Timeout::timeout(1) do
       image.fill(column: 125,

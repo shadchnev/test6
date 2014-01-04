@@ -42,13 +42,13 @@ describe 'Image#fill' do
   end
 
   it 'should fill a 250x250 image without a problem' do
-    image = Image.new(columns:50, rows:50)
+    image = Image.new(columns:250, rows:250)
     Timeout::timeout(10) do
-      image.fill(column: 25,
-                 row: 25,
+      image.fill(column: 125,
+                 row: 125,
                  colour: :A)
     end
-    expect(image.count("A")).to eq 62500
+    expect(image.to_s.count("A")).to eq 62500
   end
 
   it 'should raise an error if any coords are out of bounds' do

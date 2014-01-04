@@ -53,34 +53,16 @@ class Image
     @count ||= 0
     @count += 1
     p @count
-    return if edges.empty?
-    # colour all edges the final colour
-    edges.each{|col, row| @image[row][col] = final_colour} 
-    # add all neighbours of edges to edges
-    new_edges = []
-    puts 'before each'
-    edges.each do |col, row|
-      [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
-        candidate = [col + offset[0], row + offset[1]]
-        new_edges << candidate 
+    while !edges.empty?
+      col, row = *edges.pop
+      if in_grid?(column:col, row:row) && @image[row][col] == orig_colour
+        @image[row][col] = final_colour
+        # add all neighbours of the candidate to edges
+        [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
+          edges << [col + offset[0], row + offset[1]]
+        end
       end
     end
-    # filter out pixels that are already done, or not the original
-    # colour, or outside the boundaries of the image
-    puts 'before select'
-    new_edges.select! do |col, row|
-      begin
-        @image[row][col] == orig_colour
-      rescue NoMethodError
-        # need this for if row is out of bounds, as then
-        # you're calling [] on nil 
-        false  
-      end
-    end
-    puts self.to_s 
-    recursive_fill(edges: new_edges, 
-                   orig_colour: orig_colour, 
-                   final_colour: final_colour)
   end
 
   def validate_colour(colour:)
@@ -98,6 +80,15 @@ class Image
         "(#{column}, #{row}), but image size is "\
         "only #{@image[0].length} x #{@image.length}")
     end
+  end
+  
+  def in_grid?(column:, row:)
+    begin
+      @image.fetch(row).fetch(column)
+    rescue IndexError
+      return false
+    end
+    true
   end
 
 end

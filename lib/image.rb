@@ -58,13 +58,16 @@ class Image
     edges.each{|col, row| @image[row][col] = final_colour} 
     # add all neighbours of edges to edges
     new_edges = []
+    puts 'before each'
     edges.each do |col, row|
       [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
-        new_edges << [col + offset[0], row + offset[1]]
+        candidate = [col + offset[0], row + offset[1]]
+        new_edges << candidate 
       end
     end
     # filter out pixels that are already done, or not the original
     # colour, or outside the boundaries of the image
+    puts 'before select'
     new_edges.select! do |col, row|
       begin
         @image[row][col] == orig_colour
@@ -74,6 +77,7 @@ class Image
         false  
       end
     end
+    puts self.to_s 
     recursive_fill(edges: new_edges, 
                    orig_colour: orig_colour, 
                    final_colour: final_colour)

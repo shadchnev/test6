@@ -34,18 +34,10 @@ class Image
   def fill(column:, row:, colour:)
     validate_coords(column: column, row: row)
     validate_colour(colour: colour)
-    orig_colour = @image[column][row]
-    final_colour = colour
+    orig = @image[column][row]
     edges = [[column, row]]
     while !edges.empty?
-      col, row = *edges.pop
-      if in_grid?(column:col, row:row) && @image[col][row] == orig_colour
-        @image[col][row] = final_colour
-        # add all neighbours of the candidate to edges
-        [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
-          edges << [col + offset[0], row + offset[1]]
-        end
-      end
+      fill_from_last(edges: edges, orig_colour: orig, final_colour: colour)
     end
   end
 
@@ -54,6 +46,17 @@ class Image
   end
 
   private
+  def fill_from_last(edges:, orig_colour:, final_colour:)
+    col, row = *edges.pop
+    if in_grid?(column:col, row:row) && @image[col][row] == orig_colour
+      @image[col][row] = final_colour
+      # add all neighbours of the candidate to edges
+      [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
+        edges << [col + offset[0], row + offset[1]]
+      end
+    end
+  end
+
   def validate_colour(colour:)
     unless colour =~ /^[A-Z]$/
       raise(ArgumentError, "Invalid colour") 

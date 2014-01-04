@@ -3,7 +3,7 @@ require_relative 'image'
 class Menu
   attr_reader :image
   
-  def show_menu()
+  def show_menu
     system('clear')
     loop do
       print '> '

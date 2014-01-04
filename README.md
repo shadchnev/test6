@@ -12,7 +12,7 @@ or make it executable:
 ```
 chmod +x paint.rb
 ```
-then run just as
+then run as
 ```
 ./paint.rb
 ```

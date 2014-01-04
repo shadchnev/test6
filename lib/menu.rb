@@ -21,7 +21,7 @@ class Menu
       when /^L\s+\d+\s+\d+\s+[A-Z]$/
         colour_pixel(*parse(input))
       when /^V\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
-        process_V(*parse(input))
+        vertical_segment(*parse(input))
       when /^H\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
         horizontal_segment(*parse(input))
       when /^F\s+\d+\s+\d+\s+[A-Z]$/
@@ -62,7 +62,7 @@ class Menu
                               colour: colour)
   end
 
-  def process_V(column, startrow, endrow, colour)
+  def vertical_segment(column, startrow, endrow, colour)
     @image.vertical_segment(column: column - 1,
                             startrow: startrow - 1,
                             endrow: endrow - 1,

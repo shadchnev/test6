@@ -70,5 +70,10 @@ describe Menu do
       expect(STDOUT).to receive(:puts).with("Unrecognised command")
       @menu.process("I hi")
     end
+
+    it 'should not recognise empty input' do
+      expect(STDOUT).to receive(:puts).with("Unrecognised command")
+      @menu.process("")
+    end
   end
 end

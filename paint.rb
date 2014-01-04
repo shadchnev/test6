@@ -1,3 +1,4 @@
 require_relative 'lib/menu'
 
-Menu.menu
+menu = Menu.new
+menu.show_menu

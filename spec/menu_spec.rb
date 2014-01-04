@@ -29,25 +29,26 @@ describe Menu do
     it 'L X Y C should call @image.colour_pixel with args' do
       expect(@menu.image).to receive(:colour_pixel)
       .with(column: 5, row: 6, colour: :A)
-      @menu.process_input("L 5 6 A")
+      # NB user input is 1-indexed, all internal operations are 0-indexed
+      @menu.process_input("L 6 7 A")
     end
 
     it 'V X Y1 Y2 C should call @image.vertical_segment with args' do
       expect(@menu.image).to receive(:vertical_segment)
       .with(column: 5, startrow: 6, endrow: 7, colour: :A)
-      @menu.process_input("V 5 6 7 A")
+      @menu.process_input("V 6 7 8 A")
     end
 
     it 'H X1 X2 Y C should call @image.horizontal_segment with args' do
       expect(@menu.image).to receive(:horizontal_segment)
       .with(startcolumn: 5, endcolumn: 6, row: 7, colour: :A)
-      @menu.process_input("H 5 6 7 A")
+      @menu.process_input("H 6 7 8 A")
     end
 
     it 'F X Y C should call @image.fill with args' do
       expect(@menu.image).to receive(:fill)
       .with(column: 5, row: 6, colour: :A)
-      @menu.process_input("F 5 6 A")
+      @menu.process_input("F 6 7 A")
     end
 
     it 'S should puts @image' do

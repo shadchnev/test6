@@ -22,34 +22,35 @@ class Menu
       when /^L\s+\d+\s+\d+\s+[A-Z]$/
         column, row = *selection.split[1..2].map(&:to_i)
         colour = selection.split[3].to_sym
-        @image.colour_pixel(column: column,
-                            row: row,
+        # All operations in image.rb are zero-indexed, so need to convert
+        @image.colour_pixel(column: column - 1, 
+                            row: row - 1,
                             colour: colour)
       when /^V\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
         column, startrow, endrow = *selection.split[1..3].map(&:to_i)
         colour = selection.split[4].to_sym
-        @image.vertical_segment(column: column,
-                                startrow: startrow,
-                                endrow: endrow,
+        @image.vertical_segment(column: column - 1,
+                                startrow: startrow - 1,
+                                endrow: endrow - 1,
                                 colour: colour)
       when /^H\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
         startcolumn, endcolumn, row = *selection.split[1..3].map(&:to_i)
         colour = selection.split[4].to_sym
-        @image.horizontal_segment(startcolumn: startcolumn,
-                                  endcolumn: endcolumn,
-                                  row: row,
+        @image.horizontal_segment(startcolumn: startcolumn - 1,
+                                  endcolumn: endcolumn - 1,
+                                  row: row - 1,
                                   colour: colour)
       when /^F\s+\d+\s+\d+\s+[A-Z]$/
         column, row = *selection.split[1..2].map(&:to_i)
         colour = selection.split[3].to_sym
-        @image.fill(column: column,
-                    row: row,
+        @image.fill(column: column - 1,
+                    row: row - 1,
                     colour: colour)
       when /^S$/
         # nil has a to_s method, so need to manually raise
         # if there's no image
         raise NoMethodError unless @image
-        puts @image
+        puts @image.to_s
       when /^X$/
         exit
       else

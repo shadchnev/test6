@@ -39,7 +39,9 @@ class Image
   def fill(column:, row:, colour:)
     validate_coords(column: column, row: row)
     validate_colour(colour: colour)
-    recursive_fill(column: column, row: row, colour: colour)
+    recursive_fill(edges:[[column,row]], 
+                   orig_colour: @image[row][column], 
+                   final_colour: colour)
   end
 
   def to_s
@@ -47,26 +49,37 @@ class Image
   end
 
   private
-  def recursive_fill(column:, row:, colour:)
-    original_colour = @image[row][column]
-    colour_pixel(column: column, row: row, colour: colour)
-    # offsets for the pixels which share a side
-    # with the current one
-    [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
-      next_pixel = begin
-                     @image[row + offset[0]][column + offset[1]]
-                   rescue NoMethodError
-                     # need this for if row is out of bounds, as then
-                     # you're calling [] on nil 
-                     nil  
-                   end
-      # nil if next_pixel is out of bounds, false if wrong colour
-      if next_pixel == original_colour 
-        recursive_fill(column: column + offset[1],
-                       row: row + offset[0],
-                       colour: colour)
+  def recursive_fill(edges:, orig_colour:, final_colour:)
+    return if edges.empty?
+    p '1'
+    # colour all edges the final colour
+    edges.each{|col, row| @image[row][col] = final_colour} 
+    # add all neighbours of edges to edges
+    p '2'
+    edges.each do |col, row|
+      puts "edge = #{col}, #{row}"
+      [[0,1], [1,0], [0,-1], [-1,0]].each do |offset|
+        puts "offset = #{offset}"
+        p [col + offset[0], row + offset[1]]
+        edges << [col + offset[0], row + offset[1]]
       end
     end
+    p '3'
+    # filter out pixels that are already done, or not the original
+    # colour, or outside the boundaries of the image
+    edges.select! do |col, row|
+      begin
+        @image[row][col] == orig_colour
+      rescue NoMethodError
+        # need this for if row is out of bounds, as then
+        # you're calling [] on nil 
+        false  
+      end
+    end
+    p '4'
+    recursive_fill(edges: edges, 
+                   orig_colour: orig_colour, 
+                   final_colour: final_colour)
   end
 
   def validate_colour(colour:)

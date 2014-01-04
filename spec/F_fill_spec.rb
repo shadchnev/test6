@@ -1,4 +1,5 @@
 require 'image'
+require 'timeout'
 
 describe 'Image#fill' do
   let(:image){Image.new(columns:3, rows:3)}
@@ -42,9 +43,11 @@ describe 'Image#fill' do
 
   it 'should fill a 250x250 image without a problem' do
     image = Image.new(columns:250, rows:250)
-    image.fill(column: 125,
-               row: 125,
-               colour: :A)
+    Timeout::timeout(1) do
+      image.fill(column: 125,
+                 row: 125,
+                 colour: :A)
+    end
     expect(image.count("A")).to eq 62500
   end
 

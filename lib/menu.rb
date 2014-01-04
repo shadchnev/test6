@@ -7,42 +7,38 @@ class Menu
     system('clear')
     loop do
       print '> '
-      process_input(STDIN.gets.chomp)
+      process(STDIN.gets.chomp)
     end
   end
   
-  def process_input(selection)
+  def process(input)
     begin
-      case selection
+      case input
       when /^I\s+\d+\s+\d+$/
-        cols, rows = *selection.split[1..2].map(&:to_i)
+        cols, rows = parse(input)
         @image = Image.new(columns: cols, rows: rows)
       when /^C$/
         @image.clear
       when /^L\s+\d+\s+\d+\s+[A-Z]$/
-        column, row = *selection.split[1..2].map(&:to_i)
-        colour = selection.split[3].to_sym
+        column, row, colour = *parse(input)
         # All operations in image.rb are zero-indexed, so need to convert
         @image.colour_pixel(column: column - 1, 
                             row: row - 1,
                             colour: colour)
       when /^V\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
-        column, startrow, endrow = *selection.split[1..3].map(&:to_i)
-        colour = selection.split[4].to_sym
+        column, startrow, endrow, colour = parse(input)
         @image.vertical_segment(column: column - 1,
                                 startrow: startrow - 1,
                                 endrow: endrow - 1,
                                 colour: colour)
       when /^H\s+\d+\s+\d+\s+\d+\s+[A-Z]$/
-        startcolumn, endcolumn, row = *selection.split[1..3].map(&:to_i)
-        colour = selection.split[4].to_sym
+        startcolumn, endcolumn, row, colour = parse(input)
         @image.horizontal_segment(startcolumn: startcolumn - 1,
                                   endcolumn: endcolumn - 1,
                                   row: row - 1,
                                   colour: colour)
       when /^F\s+\d+\s+\d+\s+[A-Z]$/
-        column, row = *selection.split[1..2].map(&:to_i)
-        colour = selection.split[3].to_sym
+        column, row, colour = parse(input)
         @image.fill(column: column - 1,
                     row: row - 1,
                     colour: colour)
@@ -61,6 +57,18 @@ class Menu
     rescue NoMethodError
       puts 'No image exists'
     end
-    
+  end
+
+  private
+  def parse(input)
+    params = input.split[1..-1]
+    case params.length
+    when 2
+      params.map(&:to_i)
+    when 3
+      params[0..1].map(&:to_i) + [params[2].to_sym]
+    when 4
+      params[0..2].map(&:to_i) + [params[3].to_sym]
+    end
   end
 end

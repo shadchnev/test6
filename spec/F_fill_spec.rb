@@ -43,9 +43,9 @@ describe 'Image#fill' do
 
   it 'should fill a 250x250 image in a reasonable time' do
     image = Image.new(columns:250, rows:250)
-    Timeout::timeout(1) do
-      image.fill(column: 125,
-                 row: 125,
+    Timeout::timeout(2) do
+      image.fill(column: 0,
+                 row: 0,
                  colour: :A)
     end
     expect(image.to_s.count("A")).to eq 62500

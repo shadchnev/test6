@@ -4,11 +4,16 @@ Terminal paint
 How to use
 ----------
 
-```
-ruby paint.rb
-```
+terminal-paint uses ruby >= 2.1 for mandatory named parameters.
+It's been released for almost a whole day, so
+everyone's got it be now, right? ;)
 
-or make it executable:
+If you run it as
+```
+bundle exec ruby paint.rb
+```
+bundle will check your ruby version for you. If you don't use bundle,
+run it manually as `ruby paint.rb`. Or make it executable:
 ```
 chmod +x paint.rb
 ```

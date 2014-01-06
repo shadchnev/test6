@@ -6,7 +6,7 @@ How to use
 
 terminal-paint uses ruby >= 2.1 for mandatory named parameters.
 It's been released for almost a whole day, so
-everyone's got it be now, right? ;)
+everyone must have it by now, right? ;)
 
 If you run it as
 ```

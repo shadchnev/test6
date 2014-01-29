@@ -17,6 +17,8 @@ describe Menu do
 
   before(:each) do
     @menu = Menu.new
+    # Try to resort to instance_variable_set only when it's unavoidable.
+    # In this case you could have done something like @menu.process("I 5 5").    
     @menu.instance_variable_set(:@image, Image.new(columns: 5, rows: 5))
   end
 

@@ -5,6 +5,8 @@ describe 'terminal paint' do
     @menu = Menu.new
   end
 
+  # That's a good thing: writing tests for the examples given to you.
+  # Some candidates fail because their code doesn't pass the examples provided
   it 'should confirm to first example in the spec' do 
     @menu.process("I 5 6")
     @menu.process("L 2 3 A")

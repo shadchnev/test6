@@ -1,5 +1,6 @@
 require_relative 'image'
 
+# This class is so much more than a menu, a better name would be, well, better :)
 class Menu
   attr_reader :image
   

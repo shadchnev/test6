@@ -1,4 +1,7 @@
 class Image
+
+  MAX_SIZE = 250
+
   # Mandatory named arguments! Ruby 2.1 goodness
   def initialize(columns:, rows:)
     validate_dimension(columns: columns, rows: rows)
@@ -72,11 +75,10 @@ class Image
   end
   
   def validate_dimension(columns:, rows:)
-    if [columns, rows].any? { |dimension|
-      dimension > 250 || dimension < 1
-    } # braces make clear this is not the end of the if
+    # use constants, not magic numbers (250)
+    if [columns, rows].any? { |dimension| !(1..MAX_SIZE).include? dimension }
       raise(ArgumentError, "Rows & columns must be "\
-                           "between 1 and 250 inclusive")
+                           "between 1 and #{MAX_SIZE} inclusive")
     end
   end
 

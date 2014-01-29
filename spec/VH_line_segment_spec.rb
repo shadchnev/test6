@@ -25,6 +25,7 @@ describe 'Image#vertical_segment, Image#horizontal_segment' do
 
   it 'should raise an error if any coords are out of bounds' do
     # validation done by colour_pixel, see L_colourpixel_spec
+    # so why have this test?
   end
 end
 
